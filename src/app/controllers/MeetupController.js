@@ -37,13 +37,17 @@ class MeetupController {
       date: Yup.date().required(),
     });
 
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'validation fail' });
+    if (!(await schema.isValid(req.query))) {
+      return res.status(400).json({ error: 'validation date fail' });
     }
 
-    const { page = 1 } = req.query;
+    const { page = 1, date } = req.query;
 
-    const parsedDate = parseISO(req.body.date);
+    if (!date) {
+      return res.status(400).json({ error: 'Date is required' });
+    }
+
+    const parsedDate = parseISO(date);
 
     const meetups = await Meetup.findAll({
       where: {
