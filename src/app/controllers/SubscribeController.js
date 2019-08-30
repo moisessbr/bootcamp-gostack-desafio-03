@@ -120,7 +120,12 @@ class SubscribeController {
             {
               model: File,
               as: 'banner_id',
-              attributes: ['id', 'path', 'url'],
+              attributes: ['id', 'url'],
+            },
+            {
+              model: User,
+              as: 'organizer',
+              attributes: ['name'],
             },
           ],
         },
