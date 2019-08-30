@@ -1,12 +1,13 @@
 import * as Yup from 'yup';
-import { isBefore, format } from 'date-fns';
+import { isBefore } from 'date-fns';
 import { Op } from 'sequelize';
-import pt from 'date-fns/locale/pt';
+
 import Subscribe from '../models/Subscribe';
 import Meetup from '../models/Meetup';
 import Queue from '../../lib/Queue';
 import SubscribeMail from '../jobs/SubscribeMail';
 import User from '../models/User';
+import File from '../models/File';
 
 class SubscribeController {
   async store(req, res) {
@@ -114,7 +115,14 @@ class SubscribeController {
               [Op.gt]: new Date(),
             },
           },
-          attributes: ['title', 'description', 'location', 'date'],
+          required: true,
+          include: [
+            {
+              model: File,
+              as: 'banner_id',
+              attributes: ['id', 'path', 'url'],
+            },
+          ],
         },
       ],
       order: [[Meetup, 'date']],
